@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome.active {
+  width: 100%;
+  height: 100vh;
+  border: 1px dashed black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  background-color: white;
+}
+
+.welcome .welcome-btn {
+  padding: 5px;
+  height: 40px;
+  width: 30%;
+}
+
+.welcome {
+  display: none;
+}
+
+.container {
+  /* display: none; */
+  width: 500px;
+  height: 90%;
+  border: 1px dashed black;
+}
+
+/* input box */
+.container .text-area {
+  height: 10%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.container .input-field {
+  width: 65%;
+  height: 50px;
+}
+
+.container .text-area .send-btn {
+  height: 50px;
+  width: 15%;
+}
+
+.chat-area .message-box .message {
+  display: flex;
+}
+
+/* chatting area */
+.container .chat-area {
+  height: 90%;
+  width: 100%;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  overflow: auto;
+}
+
+.container .chat-area::-webkit-scrollbar {
+  width: 5px;
+}
+
+.container .chat-area::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.658);
+  border-radius: 5px;
+  height: 10vh;
+}
+
+.container .chat-area::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.chat-area .message-box {
+  margin: 3px 0;
+}
+
+.chat-area .message-box .message {
+  display: flex;
+}
+
+.chat-area .message-box .message .text {
+  width: fit-content;
+  max-width: 80%;
+  text-align: justify;
+  padding: 5px;
+  background-color: lightpink;
+}
