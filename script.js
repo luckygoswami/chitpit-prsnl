@@ -46,6 +46,8 @@ sendBtn.addEventListener("click", () => {
     user: `${currentUser}`,
     text: `${inputMsg}`,
   });
+
+  inputField.focus();
 });
 
 function loadData() {

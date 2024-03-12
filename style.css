@@ -86,12 +86,13 @@ body {
 }
 
 .container .input-field {
-  width: 75%;
+  width: 80%;
   height: 100%;
   padding: 10px;
   background-color: #5699c2b9;
   color: #f1faee;
   font-size: 18px;
+  line-height: 20px;
   border-radius: 10px;
   border: none;
   box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.199);
@@ -108,41 +109,20 @@ body {
 .container .input-field:focus {
   outline: none;
   font-family: "Poppins", sans-serif;
+  line-height: 20px;
 }
 
 .container .input-field::-webkit-scrollbar {
   display: none;
 }
 
-.container .input-field:focus::-webkit-scrollbar {
-  display: block;
-  width: 5px;
-  position: absolute;
-}
-
-.container .input-field:focus::-webkit-scrollbar-track {
-  width: 2px;
-  height: 50%;
-}
-
-.container .input-field:focus::-webkit-scrollbar-button {
-  display: none;
-}
-
-.container .input-field:focus::-webkit-scrollbar-thumb {
-  max-width: 2px;
-  height: 2px;
-  background-color: #1d355783;
-  border-radius: 5px;
-}
-
 .container .text-area .send-btn {
-  height: 100%;
-  width: 15%;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
   background-color: #1d3557;
   border: none;
   color: #f1faee;
-  border-radius: 20%;
   box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.349);
 }
 
