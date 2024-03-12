@@ -50,31 +50,34 @@ sendBtn.addEventListener("click", () => {
 
 function loadData() {
   onValue(chatsInDb, function (snapshot) {
-    let chatsArray = Object.values(snapshot.val());
-    chatArea.innerHTML = "";
+    if (snapshot.exists()) {
+      let chatsArray = Object.values(snapshot.val());
+      chatArea.innerHTML = "";
 
-    for (let i = 0; i < chatsArray.length; i++) {
-      let chatUser = chatsArray[i].user;
-      let chatText = chatsArray[i].text;
+      for (let i = 0; i < chatsArray.length; i++) {
+        let chatUser = chatsArray[i].user;
+        let chatText = chatsArray[i].text;
 
-      let message_box = document.createElement("div");
-      message_box.classList.add("message-box");
-      chatArea.append(message_box);
+        let message_box = document.createElement("div");
+        message_box.classList.add("message-box");
+        chatArea.append(message_box);
 
-      let message = document.createElement("div");
-      message.classList.add("message", `${chatUser}`);
-      message_box.append(message);
+        let message = document.createElement("div");
+        message.classList.add("message", `${chatUser}`);
+        message_box.append(message);
 
-      let text = document.createElement("div");
-      text.classList.add("text");
-      text.innerText = `${chatText} by ${chatUser}`;
-      message.append(text);
+        let text = document.createElement("div");
+        text.classList.add("text");
+        text.innerText = `${chatText}`;
+        message.append(text);
 
-      // aligning msgs
-      if (currentUser == chatUser) {
-        console.log("yes");
-        message.style.justifyContent = "flex-end";
+        // aligning msgs
+        if (currentUser == chatUser) {
+          message.style.justifyContent = "flex-end";
+        }
       }
+    } else {
+      console.log("snapshot doesnt exists");
     }
   });
 }
