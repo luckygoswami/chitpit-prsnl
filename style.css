@@ -80,7 +80,6 @@ body {
 .container .text-area {
   height: 10%;
   padding: 10px;
-  /* background-color: rebeccapurple; */
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -147,15 +146,10 @@ body {
   box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.349);
 }
 
-.chat-area .message-box .message {
-  display: flex;
-}
-
 /* chatting area */
 .container .chat-area {
   height: 90%;
   width: 100%;
-  /* background-color: aliceblue; */
   border-radius: 1rem 1rem 0 0;
   display: flex;
   flex-direction: column;
@@ -189,7 +183,9 @@ body {
 .chat-area .message-box .message .text {
   width: fit-content;
   max-width: 80%;
+  font-size: 15px;
   text-align: justify;
+  line-height: 20px;
   padding: 3px 5px;
   border-radius: 5px;
   background-color: var(--color-5);
