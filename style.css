@@ -4,6 +4,16 @@
   box-sizing: border-box;
 }
 
+:root {
+  font-family: "Poppins", sans-serif;
+
+  --color-1: #e63946;
+  --color-2: #f1faee;
+  --color-3: #a8dadc;
+  --color-4: #457b9d;
+  --color-5: #1d3557;
+}
+
 html,
 body {
   width: 100%;
@@ -13,9 +23,15 @@ body {
 .main {
   width: 100%;
   height: 100vh;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  /* background-color: black; */
+}
+
+.welcome {
+  display: none;
 }
 
 .welcome.active {
@@ -28,41 +44,107 @@ body {
   gap: 10px;
   position: absolute;
   background-color: white;
+  background-color: var(--color-2);
+  border: none;
 }
 
 .welcome .welcome-btn {
   padding: 5px;
   height: 40px;
   width: 30%;
+  color: #f1faee;
+  border: none;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  border-radius: 5px;
+  font-weight: 500;
 }
 
-.welcome {
-  display: none;
+#he-btn {
+  background-color: #e63946;
+}
+
+#she-btn {
+  background-color: #457b9d;
 }
 
 .container {
-  /* display: none; */
-  width: 500px;
-  height: 90%;
-  border: 1px dashed black;
+  width: 50%;
+  height: 95%;
+  background-color: #f1faee;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 15px 3px rgba(164, 164, 177, 0.589);
 }
 
 /* input box */
 .container .text-area {
   height: 10%;
+  padding: 10px;
+  /* background-color: rebeccapurple; */
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 }
 
 .container .input-field {
-  width: 65%;
-  height: 50px;
+  width: 75%;
+  height: 100%;
+  padding: 10px;
+  background-color: #5699c2b9;
+  color: #f1faee;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.199);
+  resize: none;
+  font-family: "Poppins", sans-serif;
+}
+
+.container .input-field::placeholder {
+  font-family: "Poppins", sans-serif;
+  font-size: 17px;
+  color: rgba(128, 128, 128, 0.466);
+}
+
+.container .input-field:focus {
+  outline: none;
+  font-family: "Poppins", sans-serif;
+}
+
+.container .input-field::-webkit-scrollbar {
+  display: none;
+}
+
+.container .input-field:focus::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+  position: absolute;
+}
+
+.container .input-field:focus::-webkit-scrollbar-track {
+  width: 2px;
+  height: 50%;
+}
+
+.container .input-field:focus::-webkit-scrollbar-button {
+  display: none;
+}
+
+.container .input-field:focus::-webkit-scrollbar-thumb {
+  max-width: 2px;
+  height: 2px;
+  background-color: #1d355783;
+  border-radius: 5px;
 }
 
 .container .text-area .send-btn {
-  height: 50px;
+  height: 100%;
   width: 15%;
+  background-color: #1d3557;
+  border: none;
+  color: #f1faee;
+  border-radius: 20%;
+  box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.349);
 }
 
 .chat-area .message-box .message {
@@ -73,11 +155,13 @@ body {
 .container .chat-area {
   height: 90%;
   width: 100%;
-  background-color: aliceblue;
+  /* background-color: aliceblue; */
+  border-radius: 1rem 1rem 0 0;
   display: flex;
   flex-direction: column;
   padding: 8px;
   overflow: auto;
+  overflow-x: hidden;
 }
 
 .container .chat-area::-webkit-scrollbar {
@@ -106,6 +190,20 @@ body {
   width: fit-content;
   max-width: 80%;
   text-align: justify;
-  padding: 5px;
-  background-color: lightpink;
+  padding: 3px 5px;
+  border-radius: 5px;
+  background-color: var(--color-5);
+  color: var(--color-2);
+}
+
+/* media query */
+@media (max-width: 500px) {
+  .main {
+    height: 90vh;
+  }
+
+  .container {
+    width: 100%;
+    height: 100%;
+  }
 }

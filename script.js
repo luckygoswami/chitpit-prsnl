@@ -76,8 +76,14 @@ function loadData() {
           message.style.justifyContent = "flex-end";
         }
       }
+
+      scrollToBottom();
     } else {
       console.log("snapshot doesnt exists");
     }
   });
+}
+
+function scrollToBottom() {
+  chatArea.scrollTop = chatArea.scrollHeight;
 }
