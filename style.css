@@ -27,7 +27,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: black; */
 }
 
 .welcome {
@@ -132,7 +131,7 @@ body {
   width: 100%;
   border-radius: 1rem 1rem 0 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   padding: 8px;
   overflow: auto;
   overflow-x: hidden;
