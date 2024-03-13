@@ -45,6 +45,7 @@ sendBtn.addEventListener("click", () => {
   push(chatsInDb, {
     user: `${currentUser}`,
     text: `${inputMsg}`,
+    dateAndTime: `${new Date()}`,
   });
 
   inputField.focus();
@@ -59,6 +60,8 @@ function loadData() {
       for (let i = 0; i < chatsArray.length; i++) {
         let chatUser = chatsArray[i].user;
         let chatText = chatsArray[i].text;
+        let chatDateandTime = chatsArray[i].dateAndTime;
+        let chatTime = chatDateandTime.split(" ")[4];
 
         let message_box = document.createElement("div");
         message_box.classList.add("message-box");
@@ -70,7 +73,14 @@ function loadData() {
 
         let text = document.createElement("div");
         text.classList.add("text");
-        text.innerText = `${chatText}`;
+        // text.innerText = `${chatText} at  ${chatTime
+        //   .split(":")
+        //   .slice(0, 2)
+        //   .join(":")}`;
+        text.innerHTML = `${chatText} <span class="space">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span><span class='time'>${chatTime
+          .split(":")
+          .slice(0, 2)
+          .join(":")}</span>`;
         message.append(text);
 
         // aligning msgs
@@ -81,7 +91,7 @@ function loadData() {
 
       scrollToBottom();
     } else {
-      console.log("snapshot doesnt exists");
+      console.log("snapshot doesn't exists");
     }
   });
 }

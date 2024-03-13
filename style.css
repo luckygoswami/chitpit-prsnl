@@ -161,15 +161,25 @@ body {
 }
 
 .chat-area .message-box .message .text {
+  position: relative;
   width: fit-content;
   max-width: 80%;
   font-size: 15px;
   text-align: justify;
   line-height: 20px;
-  padding: 3px 5px;
+  padding: 3px 5px 7px 3px;
   border-radius: 5px;
   background-color: var(--color-5);
   color: var(--color-2);
+}
+
+.chat-area .message-box .message .text .time {
+  margin-left: 10px;
+  opacity: 40%;
+  font-size: 9px;
+  position: absolute;
+  right: 3px;
+  bottom: 0px;
 }
 
 /* media query */
