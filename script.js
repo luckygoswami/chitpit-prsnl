@@ -7,6 +7,7 @@ import {
   push,
   onValue,
   remove,
+  update,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const appSettings = {
@@ -46,6 +47,7 @@ sendBtn.addEventListener("click", () => {
     user: `${currentUser}`,
     text: `${inputMsg}`,
     dateAndTime: `${new Date()}`,
+    seen: false,
   });
 
   inputField.focus();
@@ -54,7 +56,7 @@ sendBtn.addEventListener("click", () => {
 function loadData() {
   onValue(chatsInDb, function (snapshot) {
     if (snapshot.exists()) {
-      let chatsArray = Object.values(snapshot.val());
+      let chatsArray = Object.entries(snapshot.val());
       chatArea.innerHTML = "";
 
       // load only limited messages..
@@ -65,75 +67,76 @@ function loadData() {
           i >= chatsArray.length - chatLimit;
           i--
         ) {
-          let chatUser = chatsArray[i].user;
-          let chatText = chatsArray[i].text;
-          let chatDateandTime = chatsArray[i].dateAndTime;
-          let chatTime = chatDateandTime.split(" ")[4];
-
-          let message_box = document.createElement("div");
-          message_box.classList.add("message-box");
-          chatArea.append(message_box);
-
-          let message = document.createElement("div");
-          message.classList.add("message", `${chatUser}`);
-          message_box.append(message);
-
-          let text = document.createElement("div");
-          text.classList.add("text");
-          // text.innerText = `${chatText} at  ${chatTime
-          //   .split(":")
-          //   .slice(0, 2)
-          //   .join(":")}`;
-          text.innerHTML = `${chatText} <span class="space">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span><span class='time'>${chatTime
-            .split(":")
-            .slice(0, 2)
-            .join(":")}</span>`;
-          message.append(text);
-
-          // aligning msgs
-          if (currentUser == chatUser) {
-            message.style.justifyContent = "flex-end";
-          }
+          createChat(chatsArray, i);
         }
       } else {
         for (let i = chatsArray.length - 1; i >= 0; i--) {
-          let chatUser = chatsArray[i].user;
-          let chatText = chatsArray[i].text;
-          let chatDateandTime = chatsArray[i].dateAndTime;
-          let chatTime = chatDateandTime.split(" ")[4];
-
-          let message_box = document.createElement("div");
-          message_box.classList.add("message-box");
-          chatArea.append(message_box);
-
-          let message = document.createElement("div");
-          message.classList.add("message", `${chatUser}`);
-          message_box.append(message);
-
-          let text = document.createElement("div");
-          text.classList.add("text");
-          // text.innerText = `${chatText} at  ${chatTime
-          //   .split(":")
-          //   .slice(0, 2)
-          //   .join(":")}`;
-          text.innerHTML = `${chatText} <span class="space">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span><span class='time'>${chatTime
-            .split(":")
-            .slice(0, 2)
-            .join(":")}</span>`;
-          message.append(text);
-
-          // aligning msgs
-          if (currentUser == chatUser) {
-            message.style.justifyContent = "flex-end";
-          }
+          createChat(chatsArray, i);
         }
       }
 
       scrollToBottom();
+
+      // read receipts update
+      for (let i = 0; i < chatsArray.length; i++) {
+        let chatUser = chatsArray[i][1].user;
+
+        if (currentUser != chatUser) {
+          let chatId = chatsArray[i][0];
+          let chatLocationInDb = ref(database, `chat/${chatId}`);
+          update(chatLocationInDb, {
+            seen: true,
+          });
+        }
+      }
     } else {
       console.log("snapshot doesn't exists");
     }
   });
+}
+
+function createChat(chatData, index) {
+  let chatId = chatData[index][0];
+  let chatUser = chatData[index][1].user;
+  let chatText = chatData[index][1].text;
+  let chatDateandTime = chatData[index][1].dateAndTime;
+  let chatTime = chatDateandTime.split(" ")[4];
+  let seenStatus = chatData[index][1].seen;
+
+  let message_box = document.createElement("div");
+  message_box.classList.add("message-box");
+  chatArea.append(message_box);
+
+  let message = document.createElement("div");
+  message.classList.add("message", `${chatUser}`);
+  message_box.append(message);
+
+  let text = document.createElement("div");
+  text.classList.add("text");
+  text.innerText = `${chatText}`;
+  message.append(text);
+
+  let spaceSpan = document.createElement("span");
+  spaceSpan.classList.add("space");
+  spaceSpan.innerHTML = `&nbsp &nbsp &nbsp &nbsp &nbsp `;
+  text.append(spaceSpan);
+
+  let timeSpan = document.createElement("span");
+  timeSpan.classList.add("time");
+  timeSpan.innerHTML = `${chatTime.split(":").slice(0, 2).join(":")}&nbsp;`;
+  text.append(timeSpan);
+
+  let seenTick = document.createElement("i");
+  seenTick.classList.add("fa-solid", "fa-check-double", "read-receipt");
+
+  if (currentUser == chatUser) {
+    timeSpan.append(seenTick);
+    message.style.justifyContent = "flex-end";
+  }
+
+  if (seenStatus) {
+    seenTick.style.color = "rgba(0, 195, 255, 0.6)";
+  }
 }
 
 function scrollToBottom() {

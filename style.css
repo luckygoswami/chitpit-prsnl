@@ -88,7 +88,8 @@ body {
   width: 80%;
   height: 100%;
   padding: 10px;
-  background-color: #5699c2b9;
+  /* background-color: #5699c2b9; */
+  background-color: #1d3557;
   color: #f1faee;
   font-size: 18px;
   line-height: 20px;
@@ -118,6 +119,7 @@ body {
 .container .text-area .send-btn {
   height: 50px;
   width: 50px;
+  font-size: 20px;
   border-radius: 50%;
   background-color: #1d3557;
   border: none;
@@ -174,13 +176,21 @@ body {
 
 .chat-area .message-box .message .text .time {
   margin-left: 10px;
-  opacity: 40%;
+  color: rgba(255, 255, 255, 0.4);
   font-size: 9px;
   position: absolute;
   right: 3px;
   bottom: 0px;
 }
 
+.chat-area .message-box .message .text .time,
+.chat-area .message-box .message .text .space {
+  user-select: none;
+}
+
+.chat-area .message-box .message .text .fa-solid.fa-check-double.read-receipt {
+  color: rgba(255, 255, 255, 0.5);
+}
 /* media query */
 @media (max-width: 500px) {
   .main {
