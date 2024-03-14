@@ -18,6 +18,7 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const chatsInDb = ref(database, "chat");
+const onlineStatusInDb = ref(database, "onlineStatus");
 
 const heBtn = document.querySelector("#he-btn");
 const sheBtn = document.querySelector("#she-btn");
@@ -25,18 +26,39 @@ const sendBtn = document.querySelector(".send-btn");
 const inputField = document.querySelector(".input-field");
 const chatArea = document.querySelector(".chat-area");
 const welcomeScreen = document.querySelector(".welcome");
-let currentUser = window.localStorage.userActive;
+let currentUser = undefined;
+let antiUser = undefined;
 
 heBtn.addEventListener("click", () => {
   currentUser = "he";
+  antiUser = "she";
+
   welcomeScreen.classList.remove("active");
+
+  update(onlineStatusInDb, {
+    [currentUser]: true,
+  });
+
   loadData();
+
+  // check status
+  toggleActiveStatus();
 });
 
 sheBtn.addEventListener("click", () => {
   currentUser = "she";
+  antiUser = "he";
+
   welcomeScreen.classList.remove("active");
+
+  update(onlineStatusInDb, {
+    [currentUser]: true,
+  });
+
   loadData();
+
+  // check status
+  toggleActiveStatus();
 });
 
 sendBtn.addEventListener("click", () => {
@@ -50,6 +72,7 @@ sendBtn.addEventListener("click", () => {
     seen: false,
   });
 
+  // to prevent input from losing focus after sending a msg
   inputField.focus();
 });
 
@@ -134,6 +157,7 @@ function createChat(chatData, index) {
     message.style.justifyContent = "flex-end";
   }
 
+  // update msg seen status
   if (seenStatus) {
     seenTick.style.color = "rgba(0, 195, 255, 0.6)";
   }
@@ -141,4 +165,50 @@ function createChat(chatData, index) {
 
 function scrollToBottom() {
   chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function toggleActiveStatus() {
+  // Check if the Page Visibility API is supported
+
+  if (typeof document.hidden !== "undefined") {
+    // Browser supports Page Visibility API
+
+    // Handle page visibility change
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        // Page is visible, user is active
+        update(onlineStatusInDb, {
+          [currentUser]: true,
+        });
+        console.log("User is active");
+      } else {
+        // Page is hidden, user is inactive
+        update(onlineStatusInDb, {
+          [currentUser]: false,
+        });
+        console.log("User is offline");
+      }
+    });
+  } else {
+    // Browser does not support Page Visibility API
+    // Fallback to focus and blur events
+
+    // Handle focus event
+    window.addEventListener("focus", function () {
+      // User is active
+      update(onlineStatusInDb, {
+        [currentUser]: true,
+      });
+      console.log("User is active");
+    });
+
+    // Handle blur event
+    window.addEventListener("blur", function () {
+      // User is inactive
+      update(onlineStatusInDb, {
+        [currentUser]: false,
+      });
+      console.log("User is offline");
+    });
+  }
 }
