@@ -28,6 +28,7 @@ const inputField = document.querySelector(".input-field");
 const chatArea = document.querySelector(".chat-area");
 const welcomeScreen = document.querySelector(".welcome");
 const onlineStatusDot = document.querySelector(".onlineStatusDot");
+const screenWidth = window.screen.width;
 
 let currentUser = undefined;
 let antiUser = undefined;
@@ -65,22 +66,10 @@ sheBtn.addEventListener("click", () => {
   toggleActiveStatus();
 });
 
-sendBtn.addEventListener("click", () => {
-  let inputMsg = inputField.value;
-  inputField.value = "";
+sendBtn.addEventListener("click", sendMsg);
 
-  push(chatsInDb, {
-    user: `${currentUser}`,
-    text: `${inputMsg}`,
-    dateAndTime: `${new Date()}`,
-    seen: false,
-  });
-
-  // to prevent input from losing focus after sending a msg
-  inputField.focus();
-});
-
-inputField.addEventListener("input", function () {
+inputField.addEventListener("input", () => {
+  // to set the typing status
   clearTimeout(typingTimer);
   typingTimer = setTimeout(() => {
     // Perform action when the user stops typing
@@ -93,6 +82,32 @@ inputField.addEventListener("input", function () {
   update(typingStatusInDb, {
     [currentUser]: true,
   });
+
+  // to enable or disable send button
+  if (inputField.value.trim().length > 0) {
+    sendBtn.classList.add("active");
+  } else {
+    sendBtn.classList.remove("active");
+  }
+});
+
+inputField.addEventListener("keyup", (e) => {
+  if (!e.shiftKey && e.key == "Enter") {
+    sendMsg();
+    e.preventDefault();
+  }
+});
+
+inputField.addEventListener("keydown", (e) => {
+  if (e.shiftKey && e.key == "Enter") {
+    inputField.value += "\n";
+    inputField.scrollTop = inputField.scrollHeight;
+    e.preventDefault();
+  }
+
+  if (e.key == "Enter") {
+    e.preventDefault();
+  }
 });
 
 function loadData() {
@@ -157,6 +172,10 @@ function loadData() {
       console.log("snapshot doesn't exists");
     }
   });
+
+  if (screenWidth > 768) {
+    inputField.focus();
+  }
 }
 
 function createChat(chatData, index) {
@@ -248,4 +267,23 @@ function toggleActiveStatus() {
       });
     });
   }
+}
+
+function sendMsg() {
+  let inputMsg = inputField.value.trim();
+
+  if (inputMsg.length > 0) {
+    inputField.value = "";
+
+    push(chatsInDb, {
+      user: `${currentUser}`,
+      text: `${inputMsg}`,
+      dateAndTime: `${new Date()}`,
+      seen: false,
+    });
+  }
+
+  // to prevent input from losing focus after sending a msg
+  inputField.focus();
+  sendBtn.classList.remove("active");
 }

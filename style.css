@@ -145,8 +145,12 @@ body {
   border-radius: 50%;
   background-color: #1d3557;
   border: none;
-  color: #f1faee;
+  color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 0px 10px 3px rgba(1, 1, 43, 0.349);
+}
+
+.container .text-area .send-btn.active {
+  color: rgb(0, 230, 118);
 }
 
 /* chatting area */
