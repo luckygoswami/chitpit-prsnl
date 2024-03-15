@@ -19,6 +19,7 @@ const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const chatsInDb = ref(database, "chat");
 const onlineStatusInDb = ref(database, "chat/onlineStatus");
+const typingStatusInDb = ref(database, "chat/typingStatus");
 
 const heBtn = document.querySelector("#he-btn");
 const sheBtn = document.querySelector("#she-btn");
@@ -26,8 +27,11 @@ const sendBtn = document.querySelector(".send-btn");
 const inputField = document.querySelector(".input-field");
 const chatArea = document.querySelector(".chat-area");
 const welcomeScreen = document.querySelector(".welcome");
+const onlineStatusDot = document.querySelector(".onlineStatusDot");
+
 let currentUser = undefined;
 let antiUser = undefined;
+let typingTimer;
 
 heBtn.addEventListener("click", () => {
   currentUser = "he";
@@ -76,19 +80,42 @@ sendBtn.addEventListener("click", () => {
   inputField.focus();
 });
 
+inputField.addEventListener("input", function () {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(() => {
+    // Perform action when the user stops typing
+    update(typingStatusInDb, {
+      [currentUser]: false,
+    });
+  }, 500);
+
+  // Perform action while the user is typing (optional)
+  update(typingStatusInDb, {
+    [currentUser]: true,
+  });
+});
+
 function loadData() {
   onValue(chatsInDb, function (snapshot) {
     if (snapshot.exists()) {
       let chatsArray = Object.entries(snapshot.val());
-      let onlineStatusObject = chatsArray[chatsArray.length - 1][1];
+      let onlineStatusObject = chatsArray[chatsArray.length - 2][1];
       let currentUserOnlineStatus = onlineStatusObject[currentUser];
       let antiUserOnlineStatus = onlineStatusObject[antiUser];
-      let onlineStatusDot = document.querySelector(".onlineStatusDot");
+      let typingStatusObject = chatsArray[chatsArray.length - 1][1];
+      let currentUserTypingStatus = typingStatusObject[currentUser];
+      let antiUserTypingStatus = typingStatusObject[antiUser];
 
       if (antiUserOnlineStatus) {
-        onlineStatusDot.style.color = "greenyellow";
+        onlineStatusDot.style.color = "rgb(0,230,118)";
       } else {
         onlineStatusDot.style.color = "rgba(0, 0, 0, 0.5)";
+      }
+
+      if (antiUserTypingStatus) {
+        onlineStatusDot.classList.add("typing");
+      } else {
+        onlineStatusDot.classList.remove("typing");
       }
 
       chatArea.innerHTML = "";
@@ -97,14 +124,14 @@ function loadData() {
       const chatLimit = 100;
       if (chatsArray.length > chatLimit) {
         for (
-          let i = chatsArray.length - 2;
+          let i = chatsArray.length - 3;
           i >= chatsArray.length - chatLimit;
           i--
         ) {
           createChat(chatsArray, i);
         }
       } else {
-        for (let i = chatsArray.length - 2; i >= 0; i--) {
+        for (let i = chatsArray.length - 3; i >= 0; i--) {
           createChat(chatsArray, i);
         }
       }
@@ -114,7 +141,7 @@ function loadData() {
       // read receipts update
       // push seen msg to database if the receiver(currentUser) is active or not
       if (currentUserOnlineStatus) {
-        for (let i = 0; i < chatsArray.length - 1; i++) {
+        for (let i = 0; i < chatsArray.length - 2; i++) {
           let chatUser = chatsArray[i][1].user;
 
           if (currentUser != chatUser) {

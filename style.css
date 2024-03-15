@@ -88,7 +88,22 @@ body {
 .container .text-area .onlineStatusDot {
   font-size: 25px;
   color: rgba(0, 0, 0, 0.5);
-  /* color: greenyellow; */
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.container .text-area .onlineStatusDot.typing {
+  animation: blink 1.5s ease-in infinite;
 }
 
 .container .input-field {
