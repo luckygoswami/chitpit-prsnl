@@ -18,7 +18,7 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const chatsInDb = ref(database, "chat");
-const onlineStatusInDb = ref(database, "onlineStatus");
+const onlineStatusInDb = ref(database, "chat/onlineStatus");
 
 const heBtn = document.querySelector("#he-btn");
 const sheBtn = document.querySelector("#she-btn");
@@ -80,20 +80,24 @@ function loadData() {
   onValue(chatsInDb, function (snapshot) {
     if (snapshot.exists()) {
       let chatsArray = Object.entries(snapshot.val());
+      let onlineStatusObject = chatsArray[chatsArray.length - 1][1];
+      let currentUserOnlineStatus = onlineStatusObject[currentUser];
+      let antiUserOnlineStatus = onlineStatusObject[antiUser];
+
       chatArea.innerHTML = "";
 
       // load only limited messages..
       const chatLimit = 100;
       if (chatsArray.length > chatLimit) {
         for (
-          let i = chatsArray.length - 1;
+          let i = chatsArray.length - 2;
           i >= chatsArray.length - chatLimit;
           i--
         ) {
           createChat(chatsArray, i);
         }
       } else {
-        for (let i = chatsArray.length - 1; i >= 0; i--) {
+        for (let i = chatsArray.length - 2; i >= 0; i--) {
           createChat(chatsArray, i);
         }
       }
@@ -101,15 +105,18 @@ function loadData() {
       scrollToBottom();
 
       // read receipts update
-      for (let i = 0; i < chatsArray.length; i++) {
-        let chatUser = chatsArray[i][1].user;
+      // push seen msg to database if the receiver(currentUser) is active or not
+      if (currentUserOnlineStatus) {
+        for (let i = 0; i < chatsArray.length - 1; i++) {
+          let chatUser = chatsArray[i][1].user;
 
-        if (currentUser != chatUser) {
-          let chatId = chatsArray[i][0];
-          let chatLocationInDb = ref(database, `chat/${chatId}`);
-          update(chatLocationInDb, {
-            seen: true,
-          });
+          if (currentUser != chatUser) {
+            let chatId = chatsArray[i][0];
+            let chatLocationInDb = ref(database, `chat/${chatId}`);
+            update(chatLocationInDb, {
+              seen: true,
+            });
+          }
         }
       }
     } else {
@@ -180,13 +187,11 @@ function toggleActiveStatus() {
         update(onlineStatusInDb, {
           [currentUser]: true,
         });
-        console.log("User is active");
       } else {
         // Page is hidden, user is inactive
         update(onlineStatusInDb, {
           [currentUser]: false,
         });
-        console.log("User is offline");
       }
     });
   } else {
@@ -199,7 +204,6 @@ function toggleActiveStatus() {
       update(onlineStatusInDb, {
         [currentUser]: true,
       });
-      console.log("User is active");
     });
 
     // Handle blur event
@@ -208,7 +212,6 @@ function toggleActiveStatus() {
       update(onlineStatusInDb, {
         [currentUser]: false,
       });
-      console.log("User is offline");
     });
   }
 }
