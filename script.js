@@ -83,6 +83,13 @@ function loadData() {
       let onlineStatusObject = chatsArray[chatsArray.length - 1][1];
       let currentUserOnlineStatus = onlineStatusObject[currentUser];
       let antiUserOnlineStatus = onlineStatusObject[antiUser];
+      let onlineStatusDot = document.querySelector(".onlineStatusDot");
+
+      if (antiUserOnlineStatus) {
+        onlineStatusDot.style.color = "greenyellow";
+      } else {
+        onlineStatusDot.style.color = "rgba(0, 0, 0, 0.5)";
+      }
 
       chatArea.innerHTML = "";
 
