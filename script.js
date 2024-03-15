@@ -114,23 +114,31 @@ function loadData() {
   onValue(chatsInDb, function (snapshot) {
     if (snapshot.exists()) {
       let chatsArray = Object.entries(snapshot.val());
-      let onlineStatusObject = chatsArray[chatsArray.length - 2][1];
+      let onlineStatusObject;
+
+      if (chatsArray.length > 2) {
+        onlineStatusObject = chatsArray[chatsArray.length - 2][1];
+      } else {
+        onlineStatusObject = chatsArray[0][1];
+      }
+
       let currentUserOnlineStatus = onlineStatusObject[currentUser];
       let antiUserOnlineStatus = onlineStatusObject[antiUser];
+
       let typingStatusObject = chatsArray[chatsArray.length - 1][1];
       let currentUserTypingStatus = typingStatusObject[currentUser];
       let antiUserTypingStatus = typingStatusObject[antiUser];
+
+      if (chatsArray.length > 1 && antiUserTypingStatus) {
+        onlineStatusDot.classList.add("typing");
+      } else {
+        onlineStatusDot.classList.remove("typing");
+      }
 
       if (antiUserOnlineStatus) {
         onlineStatusDot.style.color = "rgb(0,230,118)";
       } else {
         onlineStatusDot.style.color = "rgba(0, 0, 0, 0.5)";
-      }
-
-      if (antiUserTypingStatus) {
-        onlineStatusDot.classList.add("typing");
-      } else {
-        onlineStatusDot.classList.remove("typing");
       }
 
       chatArea.innerHTML = "";
