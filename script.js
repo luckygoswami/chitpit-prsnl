@@ -21,6 +21,8 @@ const chatsInDb = ref(database, "chat");
 const onlineStatusInDb = ref(database, "chat/onlineStatus");
 const typingStatusInDb = ref(database, "chat/typingStatus");
 
+const main = document.querySelector(".main");
+const container = document.querySelector(".container");
 const heBtn = document.querySelector("#he-btn");
 const sheBtn = document.querySelector("#she-btn");
 const sendBtn = document.querySelector(".send-btn");
@@ -30,85 +32,20 @@ const welcomeScreen = document.querySelector(".welcome");
 const onlineStatusDot = document.querySelector(".onlineStatusDot");
 const screenWidth = window.screen.width;
 
+// Check if the browser is Chrome
+const isChrome =
+  /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
+// Check if the app is running in standalone mode (PWAs)
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+
+if (isStandalone) {
+  main.style.height = "100%";
+}
+
 let currentUser = undefined;
 let antiUser = undefined;
 let typingTimer;
-
-heBtn.addEventListener("click", () => {
-  currentUser = "he";
-  antiUser = "she";
-
-  welcomeScreen.classList.remove("active");
-
-  update(onlineStatusInDb, {
-    [currentUser]: true,
-  });
-
-  loadData();
-
-  // check status
-  toggleActiveStatus();
-});
-
-sheBtn.addEventListener("click", () => {
-  currentUser = "she";
-  antiUser = "he";
-
-  welcomeScreen.classList.remove("active");
-
-  update(onlineStatusInDb, {
-    [currentUser]: true,
-  });
-
-  loadData();
-
-  // check status
-  toggleActiveStatus();
-});
-
-sendBtn.addEventListener("click", sendMsg);
-
-inputField.addEventListener("input", () => {
-  // to set the typing status
-  clearTimeout(typingTimer);
-  typingTimer = setTimeout(() => {
-    // Perform action when the user stops typing
-    update(typingStatusInDb, {
-      [currentUser]: false,
-    });
-  }, 500);
-
-  // Perform action while the user is typing (optional)
-  update(typingStatusInDb, {
-    [currentUser]: true,
-  });
-
-  // to enable or disable send button
-  if (inputField.value.trim().length > 0) {
-    sendBtn.classList.add("active");
-  } else {
-    sendBtn.classList.remove("active");
-  }
-});
-
-inputField.addEventListener("keyup", (e) => {
-  if (!e.shiftKey && e.key == "Enter") {
-    sendMsg();
-    e.preventDefault();
-  }
-});
-
-inputField.addEventListener("keydown", (e) => {
-  if (e.shiftKey && e.key == "Enter") {
-    inputField.value += "\n";
-    inputField.scrollTop = inputField.scrollHeight;
-    e.preventDefault();
-  }
-
-  if (e.key == "Enter") {
-    e.preventDefault();
-  }
-});
 
 function loadData() {
   onValue(chatsInDb, function (snapshot) {
@@ -295,3 +232,81 @@ function sendMsg() {
   inputField.focus();
   sendBtn.classList.remove("active");
 }
+
+heBtn.addEventListener("click", () => {
+  currentUser = "he";
+  antiUser = "she";
+
+  welcomeScreen.classList.remove("active");
+  container.classList.add("active");
+
+  update(onlineStatusInDb, {
+    [currentUser]: true,
+  });
+
+  loadData();
+
+  // check status
+  toggleActiveStatus();
+});
+
+sheBtn.addEventListener("click", () => {
+  currentUser = "she";
+  antiUser = "he";
+
+  welcomeScreen.classList.remove("active");
+  container.classList.add("active");
+
+  update(onlineStatusInDb, {
+    [currentUser]: true,
+  });
+
+  loadData();
+
+  // check status
+  toggleActiveStatus();
+});
+
+sendBtn.addEventListener("click", sendMsg);
+
+inputField.addEventListener("input", () => {
+  // to set the typing status
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(() => {
+    // Perform action when the user stops typing
+    update(typingStatusInDb, {
+      [currentUser]: false,
+    });
+  }, 500);
+
+  // Perform action while the user is typing (optional)
+  update(typingStatusInDb, {
+    [currentUser]: true,
+  });
+
+  // to enable or disable send button
+  if (inputField.value.trim().length > 0) {
+    sendBtn.classList.add("active");
+  } else {
+    sendBtn.classList.remove("active");
+  }
+});
+
+inputField.addEventListener("keyup", (e) => {
+  if (!e.shiftKey && e.key == "Enter" && screenWidth > 500) {
+    sendMsg();
+    e.preventDefault();
+  }
+});
+
+inputField.addEventListener("keydown", (e) => {
+  if (e.shiftKey && e.key == "Enter" && screenWidth > 500) {
+    inputField.value += "\n";
+    inputField.scrollTop = inputField.scrollHeight;
+    e.preventDefault();
+  }
+
+  if (e.key == "Enter" && screenWidth > 500) {
+    e.preventDefault();
+  }
+});
