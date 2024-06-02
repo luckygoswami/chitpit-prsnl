@@ -15,6 +15,7 @@ const appSettings = {
     "https://chitpit-prsnl-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
 
+//defining const variables 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const chatsInDb = ref(database, "chat");
