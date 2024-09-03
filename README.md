@@ -2,6 +2,21 @@
 
 Chitpit is a real-time chat application built for seamless and interactive messaging. It leverages Google Firebase's Realtime Database for real-time communication and is designed as a Progressive Web App (PWA). The application includes features like online status indicators, typing notifications, and message validation, all while being fully functional on a static page.
 
+## Table of Contents
+
+- [Explore](#explore)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+
+## Explore
+
+You can explore the live demo [here](https://luckygoswami.github.io/Chitpit).
+
 ## Features
 
 - **Real-Time Messaging**: Instantly send and receive messages through Firebase's Realtime Database.
@@ -50,11 +65,21 @@ Chitpit is a real-time chat application built for seamless and interactive messa
 
 ## Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/new-feature`).
+3. Commit your changes (`git commit -m "Add some feature"`).
+4. Push to the branch (`git push origin feature/new-feature`).
+5. Create a new Pull Request.
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+
+## Contact
+
+If you have any questions or suggestions, feel free to open an issue on GitHub or contact me directly via [GitHub Issues](https://github.com/luckygoswami/Chitpit/issues).
 
 ---
 
